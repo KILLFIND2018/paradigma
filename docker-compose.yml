@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # Laravel API + Frontend
+  laravel:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: paradigma-laravel
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./api:/var/www
+      - ./storage/logs/laravel:/var/www/storage/logs
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Paradigma
+      - APP_ENV=local
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=paradigma
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - AI_SERVICE_URL=http://llm-service:5000
+      - CACHE_DRIVER=redis
+      - REDIS_HOST=redis
+    depends_on:
+      - mysql
+      - redis
+      - llm-service
+    networks:
+      - paradigma-network
+
+  # Python LLM Service
+  llm-service:
+    build:
+      context: ./llm-service
+      dockerfile: Dockerfile
+    container_name: paradigma-llm
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./llm-service:/app
+      - ./storage/logs/llm:/app/logs
+      - llm-audio:/app/audio
+    ports:
+      - "5000:5000"
+    environment:
+      - HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
+      - PYTHONUNBUFFERED=1
+    networks:
+      - paradigma-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: paradigma-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: paradigma
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - paradigma-network
+
+  # Redis for caching
+  redis:
+    image: redis:alpine
+    container_name: paradigma-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - paradigma-network
+
+  # phpMyAdmin (optional, for dev)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: paradigma-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: secret
+    depends_on:
+      - mysql
+    networks:
+      - paradigma-network
+
+volumes:
+  mysql-data:
+  redis-data:
+  llm-audio:
+
+networks:
+  paradigma-network:
+    driver: bridge

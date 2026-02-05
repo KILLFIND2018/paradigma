@@ -1,0 +1,16 @@
+node_modules/
+npm-debug.log
+yarn-error.log
+.git/
+.gitignore
+.env
+.env.local
+.env.testing
+.phpunit.result.cache
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+.dockerignore
+README.md
+CHANGELOG.md
+LICENSE
