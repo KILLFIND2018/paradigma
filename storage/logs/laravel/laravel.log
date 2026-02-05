@@ -459,3 +459,4 @@
 #64 /var/www/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('/var/www/public...')
 #65 {main}
 "} 
+[2026-02-05 22:31:17] local.ERROR: Chat error {"error":"cURL error 6: Could not resolve host: llm-service (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http://llm-service:5000/generate"} 
