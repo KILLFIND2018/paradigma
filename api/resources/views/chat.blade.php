@@ -18,22 +18,23 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             overflow: hidden;
         }
 
-        #chat-container {
+        .chat-container {
             width: 100%;
             max-width: 1200px;
             height: 90vh;
             display: flex;
             gap: 20px;
+            flex-direction: row;
+
         }
 
-        #model-container {
+        .model-container {
             flex: 3;
             position: relative;
             border-radius: 10px;
@@ -41,7 +42,7 @@
             background: #1a252f;
         }
 
-        #chat-interface {
+        .chat-interface {
             flex: 2;
             display: flex;
             flex-direction: column;
@@ -76,7 +77,7 @@
             margin-right: auto;
         }
 
-        #input-area {
+        .input-area {
             display: flex;
             gap: 10px;
         }
@@ -90,7 +91,7 @@
             color: #2c3e50;
         }
 
-        #send-button {
+        .send-button {
             padding: 10px 20px;
             background: #1abc9c;
             border: none;
@@ -114,17 +115,24 @@
             0%, 100% { opacity: 0.2; }
             50% { opacity: 1; }
         }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+            }
+
+        }
     </style>
 </head>
 <body>
-<div id="chat-container">
+<div class="chat-container">
     <!-- Контейнер для 3D модели -->
-    <div id="model-container">
+    <div class="model-container">
         <div id="loading">Загрузка модели...</div>
     </div>
 
     <!-- Интерфейс чата -->
-    <div id="chat-interface">
+    <div class="chat-interface">
         <div id="messages">
             <!-- Сообщения будут здесь -->
         </div>
@@ -135,9 +143,9 @@
             <span style="--i: 2">.</span>
         </div>
 
-        <div id="input-area">
+        <div class="input-area">
             <input type="text" id="message-input" placeholder="Введите сообщение...">
-            <button id="send-button">Отправить</button>
+            <button class="send-button">Отправить</button>
         </div>
     </div>
 </div>
@@ -151,12 +159,12 @@
 
     function init3D() {
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, document.getElementById('model-container').offsetWidth / document.getElementById('model-container').offsetHeight, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(75, document.querySelector('.model-container').offsetWidth / document.querySelector('.model-container').offsetHeight, 0.1, 1000);
         camera.position.set(0, 0, 5);
 
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(document.getElementById('model-container').offsetWidth, document.getElementById('model-container').offsetHeight);
-        document.getElementById('model-container').appendChild(renderer.domElement);
+        renderer.setSize(document.querySelector('.model-container').offsetWidth, document.querySelector('.model-container').offsetHeight);
+        document.querySelector('.model-container').appendChild(renderer.domElement);
 
         // Освещение
         const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -311,7 +319,7 @@
         init3D();
 
         // Обработчики событий
-        document.getElementById('send-button').addEventListener('click', sendMessage);
+        document.querySelector('.send-button').addEventListener('click', sendMessage);
         document.getElementById('message-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
@@ -327,9 +335,9 @@
     // Ресайз окна
     window.addEventListener('resize', () => {
         if (camera && renderer) {
-            camera.aspect = document.getElementById('model-container').offsetWidth / document.getElementById('model-container').offsetHeight;
+            camera.aspect = document.querySelector('.model-container').offsetWidth / document.querySelector('.model-container').offsetHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(document.getElementById('model-container').offsetWidth, document.getElementById('model-container').offsetHeight);
+            renderer.setSize(document.querySelector('.model-container').offsetWidth, document.querySelector('.model-container').offsetHeight);
         }
     });
 </script>
