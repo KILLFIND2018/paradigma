@@ -460,3 +460,5 @@
 #65 {main}
 "} 
 [2026-02-05 22:31:17] local.ERROR: Chat error {"error":"cURL error 6: Could not resolve host: llm-service (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http://llm-service:5000/generate"} 
+[2026-02-05 22:59:57] local.ERROR: Chat error {"error":"cURL error 6: Could not resolve host: llm-service (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http://llm-service:5000/generate"} 
+[2026-02-07 08:31:33] local.ERROR: Chat error {"error":"cURL error 7: Failed to connect to llm-service port 5000 after 5 ms: Could not connect to server (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http://llm-service:5000/generate"} 
